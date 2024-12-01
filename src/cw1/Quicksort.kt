@@ -26,9 +26,11 @@ fun quicksortSequential(array: IntArray, low: Int, high: Int) {
     }
 }
 
+var THRESHOLD: Int = 256
+
 class ParQuicksortTask(private val arr: IntArray, private val low: Int, private val high: Int) : RecursiveAction() {
     override fun compute() {
-        if (high - low < 64) {
+        if (high - low < THRESHOLD) {
             quicksortSequential(arr, low, high)
             return
         }
@@ -96,6 +98,7 @@ fun main() {
     println("Local logical processors count: ${Runtime.getRuntime().availableProcessors()}")
     println("Using $processes processes for ForkJoinPool")
     testImplementations()
+
     var seqTime = 0L
     repeat(loopCount) {
         val arrCopy = arr.copyOf()
@@ -123,4 +126,3 @@ fun main() {
 
     println("Parallel speedup is ${String.format("%.3f", seqTime.toDouble() / parTime.toDouble())}")
 }
-
